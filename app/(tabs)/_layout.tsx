@@ -7,6 +7,11 @@ import { useSafeAreaInsets } from "react-native-safe-area-context"
 
 const tabBar = components.tabBar
 
+/**
+ * Provides the tab-based layout for the `(tabs)` route group, rendering a customized bottom tab bar and its screens.
+ *
+ * @returns The root `<Tabs>` layout element configured with a styled, safe-area-aware tab bar and one screen per entry in `tabs`.
+ */
 export default function TabLayout() {
   const insets = useSafeAreaInsets()
 
