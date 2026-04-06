@@ -2,10 +2,25 @@ import { tabs } from "@/constants/data"
 import { colors, components } from "@/constants/theme"
 import clsx from "clsx"
 import { Tabs } from "expo-router"
-import { Image, View } from "react-native"
+import { Image, ImageSourcePropType, View } from "react-native"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 
 const tabBar = components.tabBar
+
+interface TabIconProps {
+  icon: ImageSourcePropType
+  focused: boolean
+}
+
+function TabIcon({ icon, focused }: TabIconProps) {
+  return (
+    <View className={`tabs-icon`}>
+      <View className={clsx("tabs-pill", focused && "tabs-active")}>
+        <Image source={icon} resizeMode="contain" className="tabs-glyph" />
+      </View>
+    </View>
+  )
+}
 
 /**
  * Provides the tab-based layout for the `(tabs)` route group, rendering a customized bottom tab bar and its screens.
@@ -15,15 +30,6 @@ const tabBar = components.tabBar
 export default function TabLayout() {
   const insets = useSafeAreaInsets()
 
-  function TabIcon({ icon, focused }: TabIconProps) {
-    return (
-      <View className={`tabs-icon`}>
-        <View className={clsx("tabs-pill", focused && "tabs-active")}>
-          <Image source={icon} resizeMode="contain" className="tabs-glyph" />
-        </View>
-      </View>
-    )
-  }
   return (
     <Tabs
       screenOptions={{
