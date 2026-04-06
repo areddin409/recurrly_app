@@ -1,14 +1,12 @@
+import { SafeAreaView } from "@/lib/interop"
 import { Link } from "expo-router"
-import React from "react"
-import { Text, View } from "react-native"
+import { Text } from "react-native"
 
-const SignUp = () => {
+export default function SignUp() {
   return (
-    <View>
-      <Text>SignUp</Text>
+    <SafeAreaView className="flex-1 bg-background p-5">
+      <Text className="text-xl font-sans-bold text-primary">Sign Up</Text>
       <Link href="/(auth)/sign-in">Already have an account? Sign In</Link>
-    </View>
+    </SafeAreaView>
   )
 }
-
-export default SignUp

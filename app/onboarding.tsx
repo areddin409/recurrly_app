@@ -1,12 +1,10 @@
-import React from "react"
-import { Text, View } from "react-native"
+import { SafeAreaView } from "@/lib/interop"
+import { Text } from "react-native"
 
-const Onboarding = () => {
+export default function Onboarding() {
   return (
-    <View>
-      <Text>Onboarding</Text>
-    </View>
+    <SafeAreaView className="flex-1 bg-background p-5">
+      <Text className="text-xl font-sans-bold text-primary">Onboarding</Text>
+    </SafeAreaView>
   )
 }
-
-export default Onboarding

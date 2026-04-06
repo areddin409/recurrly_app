@@ -1,12 +1,10 @@
-import React from "react"
-import { Text, View } from "react-native"
+import { SafeAreaView } from "@/lib/interop"
+import { Text } from "react-native"
 
-const Insights = () => {
+export default function Insights() {
   return (
-    <View>
-      <Text>Insights</Text>
-    </View>
+    <SafeAreaView className="flex-1 bg-background p-5">
+      <Text className="text-xl font-sans-bold text-primary">Insights</Text>
+    </SafeAreaView>
   )
 }
-
-export default Insights
