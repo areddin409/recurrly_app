@@ -1,5 +1,9 @@
 import { icons } from "./icons"
 
+function getFutureISO(days: number): string {
+  return new Date(Date.now() + days * 24 * 60 * 60 * 1000).toISOString()
+}
+
 export const tabs: AppTab[] = [
   { name: "index", title: "Home", icon: icons.home },
   { name: "subscriptions", title: "Subscriptions", icon: icons.wallet },
@@ -13,7 +17,7 @@ export const HOME_USER = {
 
 export const HOME_BALANCE = {
   amount: 2489.48,
-  nextRenewalDate: "2026-03-18T09:00:00.000Z"
+  nextRenewalDate: getFutureISO(13)
 }
 
 export const UPCOMING_SUBSCRIPTIONS: UpcomingSubscription[] = [
@@ -56,7 +60,7 @@ export const HOME_SUBSCRIPTIONS: Subscription[] = [
     price: 77.49,
     currency: "USD",
     billing: "Monthly",
-    renewalDate: "2026-03-20T10:00:00.000Z",
+    renewalDate: getFutureISO(15),
     color: "#f5c542"
   },
   {
@@ -71,7 +75,7 @@ export const HOME_SUBSCRIPTIONS: Subscription[] = [
     price: 9.99,
     currency: "USD",
     billing: "Monthly",
-    renewalDate: "2026-03-24T10:00:00.000Z",
+    renewalDate: getFutureISO(19),
     color: "#e8def8"
   },
   {
@@ -86,7 +90,7 @@ export const HOME_SUBSCRIPTIONS: Subscription[] = [
     price: 20.0,
     currency: "USD",
     billing: "Monthly",
-    renewalDate: "2026-03-27T10:00:00.000Z",
+    renewalDate: getFutureISO(22),
     color: "#b8d4e3"
   },
   {
@@ -101,7 +105,7 @@ export const HOME_SUBSCRIPTIONS: Subscription[] = [
     price: 119.99,
     currency: "USD",
     billing: "Yearly",
-    renewalDate: "2026-04-02T10:00:00.000Z",
+    renewalDate: getFutureISO(27),
     color: "#b8e8d0"
   }
 ]
