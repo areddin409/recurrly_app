@@ -3,6 +3,11 @@ import { SafeAreaView } from "@/lib/interop"
 import { Link } from "expo-router"
 import { Text } from "react-native"
 
+/**
+ * Renders the app's home screen with a header and navigation links for onboarding, sign-in, sign-up, and Spotify subscription.
+ *
+ * @returns The root React element for the home screen layout.
+ */
 export default function App() {
   return (
     <SafeAreaView className="flex-1 bg-background   p-5">
