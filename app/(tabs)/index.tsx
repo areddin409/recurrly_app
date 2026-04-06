@@ -1,9 +1,16 @@
+import "@/global.css"
+import { SafeAreaView } from "@/lib/interop"
 import { Link } from "expo-router"
-import { Text, View } from "react-native"
+import { Text } from "react-native"
 
+/**
+ * Renders the app's home screen with a header and navigation links for onboarding, sign-in, sign-up, and Spotify subscription.
+ *
+ * @returns The root React element for the home screen layout.
+ */
 export default function App() {
   return (
-    <View className="flex-1 items-center justify-center bg-background">
+    <SafeAreaView className="flex-1 bg-background   p-5">
       <Text className="text-xl font-bold text-success">
         Welcome to Nativewind!
       </Text>
@@ -32,6 +39,6 @@ export default function App() {
       >
         <Text>Spotify Subscription</Text>
       </Link>
-    </View>
+    </SafeAreaView>
   )
 }
