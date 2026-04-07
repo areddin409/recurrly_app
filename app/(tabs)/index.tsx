@@ -1,47 +1,44 @@
-import HomeHeader from "@/components/HomeHeader"
-import SubscriptionCard from "@/components/SubscriptionCard"
-import { HOME_SUBSCRIPTIONS } from "@/constants/data"
-import { components } from "@/constants/theme"
 import "@/global.css"
 import { SafeAreaView } from "@/lib/interop"
-import { useState } from "react"
-import { FlatList, Text, View } from "react-native"
-import { useSafeAreaInsets } from "react-native-safe-area-context"
+import { Link } from "expo-router"
+import { Text } from "react-native"
 
+/**
+ * Renders the app's home screen with a header and navigation links for onboarding, sign-in, sign-up, and Spotify subscription.
+ *
+ * @returns The root React element for the home screen layout.
+ */
 export default function App() {
-  const [expandedSubscriptionId, setExpandedSubscriptionId] = useState<
-    string | null
-  >(null)
-  const insets = useSafeAreaInsets()
-  const { tabBar } = components
-  const bottomPadding =
-    Math.max(insets.bottom, tabBar.horizontalInset) + tabBar.height / 2
-
   return (
-    <SafeAreaView className="flex-1 bg-background p-5">
-      <FlatList
-        contentContainerStyle={{ paddingBottom: bottomPadding }}
-        data={HOME_SUBSCRIPTIONS}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <SubscriptionCard
-            {...item}
-            expanded={expandedSubscriptionId === item.id}
-            onPress={() =>
-              setExpandedSubscriptionId((currentId) =>
-                currentId === item.id ? null : item.id
-              )
-            }
-          />
-        )}
-        extraData={expandedSubscriptionId}
-        ListHeaderComponent={<HomeHeader />}
-        ItemSeparatorComponent={() => <View className="h-4" />}
-        showsVerticalScrollIndicator={false}
-        ListEmptyComponent={
-          <Text className="home-empty-state">No subscriptions added yet.</Text>
-        }
-      />
+    <SafeAreaView className="flex-1 bg-background   p-5">
+      <Text className="text-xl font-bold text-success">
+        Welcome to Nativewind!
+      </Text>
+      <Link
+        href="/onboarding"
+        className="mt-4 rounded bg-primary text-white p-4"
+      >
+        <Text>Go to Onboarding</Text>
+      </Link>
+      <Link
+        href="/(auth)/sign-in"
+        className="mt-4 rounded bg-primary text-white p-4"
+      >
+        <Text>Go to Sign In</Text>
+      </Link>
+      <Link
+        href="/(auth)/sign-up"
+        className="mt-4 rounded bg-primary text-white p-4"
+      >
+        <Text>Go to Sign Up</Text>
+      </Link>
+
+      <Link
+        href="/subscriptions/spotify"
+        className="mt-4 rounded bg-primary text-white p-4"
+      >
+        <Text>Spotify Subscription</Text>
+      </Link>
     </SafeAreaView>
   )
 }
