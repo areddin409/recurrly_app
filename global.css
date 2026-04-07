@@ -79,7 +79,11 @@
   }
 
   .home-add-icon {
-    @apply size-12;
+    @apply size-12 items-center justify-center rounded-full border border-border bg-card;
+  }
+
+  .home-add-glyph {
+    @apply size-5;
   }
 
   .home-balance-card {
