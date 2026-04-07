@@ -4,7 +4,7 @@ import UpcomingSubscriptionCard from "@/components/UpcomingSubscriptionCard"
 import { HOME_USER, UPCOMING_SUBSCRIPTIONS } from "@/constants/data"
 import { icons } from "@/constants/icons"
 import images from "@/constants/images"
-import { FlatList, Image, Text, View } from "react-native"
+import { Image, ScrollView, Text, View } from "react-native"
 
 export default function HomeHeader() {
   return (
@@ -23,16 +23,15 @@ export default function HomeHeader() {
 
       <View>
         <ListHeading title="Upcoming" />
-        <FlatList
-          data={UPCOMING_SUBSCRIPTIONS}
-          renderItem={({ item }) => <UpcomingSubscriptionCard {...item} />}
-          keyExtractor={(item) => item.id}
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          ListEmptyComponent={
-            <Text className="home-empty-state">No upcoming renewals yet.</Text>
-          }
-        />
+        {UPCOMING_SUBSCRIPTIONS.length === 0 ? (
+          <Text className="home-empty-state">No upcoming renewals yet.</Text>
+        ) : (
+          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+            {UPCOMING_SUBSCRIPTIONS.map((item) => (
+              <UpcomingSubscriptionCard key={item.id} {...item} />
+            ))}
+          </ScrollView>
+        )}
       </View>
 
       <ListHeading title="All Subscriptions" />
