@@ -1,5 +1,6 @@
 import { icons } from "@/constants/icons"
 import { useSSO } from "@clerk/clerk-expo"
+import * as Linking from "expo-linking"
 import * as WebBrowser from "expo-web-browser"
 import { useCallback } from "react"
 import { Image, Text, TouchableOpacity, View } from "react-native"
@@ -19,7 +20,8 @@ function SSOButton({
 
   const handlePress = useCallback(async () => {
     try {
-      const { createdSessionId, setActive } = await startSSOFlow({ strategy })
+      const redirectUrl = Linking.createURL("/")
+      const { createdSessionId, setActive } = await startSSOFlow({ strategy, redirectUrl })
       if (createdSessionId && setActive) {
         await setActive({ session: createdSessionId })
       }

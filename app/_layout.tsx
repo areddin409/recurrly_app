@@ -15,6 +15,8 @@ if (!publishableKey) {
   throw new Error("Add EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY to your .env.local")
 }
 
+SplashScreen.preventAutoHideAsync()
+
 export default function RootLayout() {
   const [fontsLoaded] = useFonts({
     "sans-regular": require("../assets/fonts/PlusJakartaSans-Regular.ttf"),

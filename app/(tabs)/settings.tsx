@@ -16,7 +16,13 @@ export default function Settings() {
 
       <View className="mt-auto mb-24">
         <Pressable
-          onPress={() => signOut()}
+          onPress={async () => {
+            try {
+              await signOut()
+            } catch (err) {
+              console.error("Sign out failed", err)
+            }
+          }}
           className="bg-red-500 p-4 rounded-lg active:opacity-80"
         >
           <Text className="text-white text-center font-sans-semibold text-base">

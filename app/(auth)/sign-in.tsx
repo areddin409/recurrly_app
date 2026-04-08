@@ -1,4 +1,5 @@
 import SSOButtons from "@/components/SSOButtons"
+import { colors } from "@/constants/theme"
 import { useSignIn } from "@clerk/clerk-expo"
 import { Link, useRouter } from "expo-router"
 import { useState } from "react"
@@ -14,10 +15,21 @@ import {
 } from "react-native"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 
+const INPUT_STYLE = {
+  backgroundColor: "#ffffff",
+  borderWidth: 1,
+  borderColor: "rgba(0,0,0,0.1)",
+  borderRadius: 14,
+  paddingHorizontal: 16,
+  paddingVertical: 15,
+  fontSize: 15,
+  fontFamily: "sans-medium",
+  color: colors.primary
+} as const
+
 type FormErrors = {
   email?: string
   password?: string
-  code?: string
   general?: string
 }
 
@@ -28,7 +40,6 @@ export default function SignIn() {
 
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
-  const [code, setCode] = useState("")
   const [loading, setLoading] = useState(false)
   const [errors, setErrors] = useState<FormErrors>({})
 
@@ -63,27 +74,12 @@ export default function SignIn() {
     setLoading(true)
     try {
       const result = await signIn.create({ identifier: email, password })
-
       if (result.status === "complete") {
         await setActive({ session: result.createdSessionId })
         router.replace("/(tabs)")
-      } else if (result.status === "needs_first_factor") {
-        // Additional factor needed - email verification will be triggered
-        const emailCodeFactor = result.supportedFirstFactors?.find(
-          (factor: any) => factor.strategy === "email_code"
-        )
-
-        if (emailCodeFactor) {
-          await signIn.prepareFirstFactor({
-            strategy: "email_code",
-            emailAddressId: (emailCodeFactor as any).emailAddressId
-          })
-        }
       }
     } catch (err: any) {
-      // Handle field-specific errors
       const newErrors: FormErrors = {}
-
       if (err?.errors) {
         err.errors.forEach((error: any) => {
           const field = error.meta?.paramName
@@ -98,184 +94,12 @@ export default function SignIn() {
       } else {
         newErrors.general = "Invalid email or password"
       }
-
       setErrors(newErrors)
     } finally {
       setLoading(false)
     }
   }
 
-  async function handleVerifyCode() {
-    if (!code || !signIn) {
-      setErrors({ code: "Verification code is required" })
-      return
-    }
-
-    setErrors({})
-    setLoading(true)
-    try {
-      const result = await signIn.attemptFirstFactor({
-        strategy: "email_code",
-        code
-      })
-
-      if (result.status === "complete") {
-        if (setActive) {
-          await setActive({ session: result.createdSessionId })
-        }
-        router.replace("/(tabs)")
-      }
-    } catch (err: any) {
-      const newErrors: FormErrors = {}
-      if (err?.errors) {
-        err.errors.forEach((error: any) => {
-          newErrors.code =
-            error.longMessage || error.message || "Invalid verification code"
-        })
-      } else {
-        newErrors.code = "Invalid verification code"
-      }
-      setErrors(newErrors)
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  // Show verification screen if first factor is needed
-  if (signIn?.status === "needs_first_factor") {
-    return (
-      <View className="flex-1 bg-accent" style={{ paddingTop: insets.top }}>
-        {/* Hero */}
-        <View className="items-center justify-center py-10 gap-1">
-          <View className="flex-row items-center gap-3.5">
-            <View className="size-14 rounded-2xl bg-white/20 items-center justify-center">
-              <Text className="text-[26px] font-sans-extrabold text-white">
-                R
-              </Text>
-            </View>
-            <View>
-              <Text className="text-[30px] font-sans-extrabold text-white leading-[34px]">
-                Recurrly
-              </Text>
-              <Text className="text-[10px] font-sans-semibold text-white/65 tracking-[2.5px] uppercase">
-                Smart Billing
-              </Text>
-            </View>
-          </View>
-        </View>
-
-        {/* Sheet */}
-        <KeyboardAvoidingView
-          behavior={Platform.OS === "ios" ? "padding" : "height"}
-          className="flex-1"
-        >
-          <ScrollView
-            className="flex-1 bg-background rounded-tl-[36px] rounded-tr-[36px]"
-            contentContainerStyle={{
-              paddingHorizontal: 28,
-              paddingTop: 36,
-              paddingBottom: insets.bottom + 32
-            }}
-            keyboardShouldPersistTaps="handled"
-            showsVerticalScrollIndicator={false}
-          >
-            <Text className="text-[28px] font-sans-extrabold text-primary mb-1.5">
-              Verify your identity
-            </Text>
-            <Text className="text-[15px] font-sans-medium text-muted-foreground mb-7">
-              We sent a verification code to {email}
-            </Text>
-
-            {/* Verification Code */}
-            <View className="gap-1.5 mb-6">
-              <Text className="text-[13px] font-sans-semibold text-primary">
-                Verification Code
-              </Text>
-              <TextInput
-                className={
-                  errors.code
-                    ? "bg-white border border-destructive rounded-[14px] px-4 py-[15px] font-sans-medium text-primary tracking-[8px] text-xl text-center"
-                    : "bg-white border border-border rounded-[14px] px-4 py-[15px] font-sans-medium text-primary tracking-[8px] text-xl text-center"
-                }
-                value={code}
-                onChangeText={setCode}
-                placeholder="000000"
-                placeholderTextColor="rgba(8,17,38,0.25)"
-                keyboardType="number-pad"
-                maxLength={6}
-                autoFocus
-              />
-              {errors.code && (
-                <Text className="text-xs font-sans-medium text-destructive">
-                  {errors.code}
-                </Text>
-              )}
-            </View>
-
-            {/* Verify button */}
-            <TouchableOpacity
-              onPress={handleVerifyCode}
-              disabled={loading || !code}
-              className={
-                loading || !code
-                  ? "bg-accent rounded-2xl py-4 items-center mb-3.5 opacity-50"
-                  : "bg-accent rounded-2xl py-4 items-center mb-3.5"
-              }
-            >
-              {loading ? (
-                <ActivityIndicator color="#fff" />
-              ) : (
-                <Text className="text-base font-sans-bold text-white">
-                  Verify
-                </Text>
-              )}
-            </TouchableOpacity>
-
-            {/* Resend Code */}
-            <TouchableOpacity
-              onPress={() => {
-                const emailCodeFactor = signIn.supportedFirstFactors?.find(
-                  (factor: any) => factor.strategy === "email_code"
-                )
-                if (emailCodeFactor && signIn) {
-                  signIn.prepareFirstFactor({
-                    strategy: "email_code",
-                    emailAddressId: (emailCodeFactor as any).emailAddressId
-                  })
-                }
-              }}
-              disabled={loading}
-              className="items-center py-3"
-            >
-              <Text className="text-sm font-sans-semibold text-accent">
-                Resend code
-              </Text>
-            </TouchableOpacity>
-
-            {/* Start Over */}
-            <TouchableOpacity
-              onPress={() => {
-                setCode("")
-                setErrors({})
-                setEmail("")
-                setPassword("")
-                setEmailTouched(false)
-                setPasswordTouched(false)
-              }}
-              disabled={loading}
-              className="items-center py-3"
-            >
-              <Text className="text-sm font-sans-semibold text-muted-foreground">
-                Start over
-              </Text>
-            </TouchableOpacity>
-          </ScrollView>
-        </KeyboardAvoidingView>
-      </View>
-    )
-  }
-
-  // Main sign-in form
   return (
     <View className="flex-1 bg-accent" style={{ paddingTop: insets.top }}>
       {/* Hero */}
@@ -333,11 +157,7 @@ export default function SignIn() {
               Email
             </Text>
             <TextInput
-              className={
-                errors.email || (emailTouched && !emailValid)
-                  ? "bg-white border border-destructive rounded-[14px] px-4 py-[15px] text-[15px] font-sans-medium text-primary"
-                  : "bg-white border border-border rounded-[14px] px-4 py-[15px] text-[15px] font-sans-medium text-primary"
-              }
+              style={[INPUT_STYLE, (errors.email || (emailTouched && !emailValid)) ? { borderColor: colors.destructive } : {}]}
               value={email}
               onChangeText={setEmail}
               onBlur={() => setEmailTouched(true)}
@@ -365,11 +185,7 @@ export default function SignIn() {
               Password
             </Text>
             <TextInput
-              className={
-                errors.password || (passwordTouched && !passwordValid)
-                  ? "bg-white border border-destructive rounded-[14px] px-4 py-[15px] text-[15px] font-sans-medium text-primary"
-                  : "bg-white border border-border rounded-[14px] px-4 py-[15px] text-[15px] font-sans-medium text-primary"
-              }
+              style={[INPUT_STYLE, (errors.password || (passwordTouched && !passwordValid)) ? { borderColor: colors.destructive } : {}]}
               value={password}
               onChangeText={setPassword}
               onBlur={() => setPasswordTouched(true)}
