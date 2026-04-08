@@ -3,9 +3,12 @@ import { useAuth } from "@clerk/clerk-expo"
 import { Pressable, Text, View } from "react-native"
 
 /**
- * Renders the Settings screen using a safe-area layout and displays a styled "Settings" heading.
+ * Renders the Settings screen with a heading and a bottom-aligned Sign Out action.
  *
- * @returns The React element tree: a SafeAreaView containing a styled `Text` node with the label "Settings".
+ * The screen is wrapped in a safe-area layout and displays a "Settings" heading.
+ * It includes a "Sign Out" button that invokes the authentication `signOut` action when pressed; any error from sign-out is logged to the console.
+ *
+ * @returns The React element tree for the Settings screen (a SafeAreaView containing the heading and the Sign Out control).
  */
 export default function Settings() {
   const { signOut } = useAuth()

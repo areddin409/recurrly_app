@@ -9,6 +9,13 @@ import { useRouter } from "expo-router"
 import { Image } from "@/lib/interop"
 import { FlatList, Pressable, Text, View } from "react-native"
 
+/**
+ * Renders the home screen header UI including the user identity area, balance card, upcoming subscriptions carousel, and an "All Subscriptions" heading.
+ *
+ * The user area is tappable and navigates to the settings route; it displays the user's avatar (falls back to a local avatar) and the user's first name, the local-part of their first email, or "User" if neither is available. The upcoming section displays `UPCOMING_SUBSCRIPTIONS` in a horizontal list and shows an empty-state message when there are no items.
+ *
+ * @returns The composed JSX element for the home header and its related sections.
+ */
 export default function HomeHeader() {
   const { user } = useUser()
   const router = useRouter()

@@ -7,6 +7,14 @@ import { Image, Text, TouchableOpacity, View } from "react-native"
 
 WebBrowser.maybeCompleteAuthSession()
 
+/**
+ * Renders a button that initiates an OAuth SSO flow for the given provider.
+ *
+ * @param strategy - The OAuth strategy to use: `"oauth_google"` or `"oauth_github"`.
+ * @param label - The text displayed inside the button.
+ * @param iconContent - The icon node displayed to the left of the label.
+ * @returns A touchable button that starts the configured SSO flow when pressed.
+ */
 function SSOButton({
   strategy,
   label,
@@ -43,6 +51,11 @@ function SSOButton({
   )
 }
 
+/**
+ * Renders two single sign-on buttons for Google and GitHub.
+ *
+ * @returns A React element containing two SSO buttons stacked vertically with spacing.
+ */
 export default function SSOButtons() {
   return (
     <View className="gap-3">

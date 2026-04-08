@@ -9,6 +9,11 @@ import { useSafeAreaInsets } from "react-native-safe-area-context"
 
 import "@/global.css"
 
+/**
+ * Renders a fixed-height spacer used between subscription items.
+ *
+ * @returns A React element that is a spacer with height `h-4`
+ */
 function SubscriptionSeparator() {
   return <View className="h-4" />
 }

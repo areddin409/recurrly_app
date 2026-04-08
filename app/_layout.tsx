@@ -17,6 +17,13 @@ if (!publishableKey) {
 
 SplashScreen.preventAutoHideAsync()
 
+/**
+ * Root app layout that loads fonts, manages the splash screen lifecycle, and provides authentication and navigation context.
+ *
+ * The component waits for app fonts to load before rendering. While fonts are loading it renders `null`; once loaded it hides the splash screen and renders the app wrapped with Clerk authentication and the navigation stack.
+ *
+ * @returns The rendered layout: `ClerkProvider` containing a status bar and the app `Stack` when fonts are loaded, or `null` while fonts are loading.
+ */
 export default function RootLayout() {
   const [fontsLoaded] = useFonts({
     "sans-regular": require("../assets/fonts/PlusJakartaSans-Regular.ttf"),

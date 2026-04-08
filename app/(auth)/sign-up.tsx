@@ -34,6 +34,11 @@ type FormErrors = {
   general?: string
 }
 
+/**
+ * Renders the centered Hero branding: a stylized "R" icon with "Recurrly" and a "Smart Billing" subtitle.
+ *
+ * @returns The JSX element containing the branding header.
+ */
 function Hero() {
   return (
     <View className="items-center justify-center py-10">
@@ -54,6 +59,15 @@ function Hero() {
   )
 }
 
+/**
+ * Renders the sign-up flow with email/password registration and email-code verification.
+ *
+ * Manages local form state, validation, async sign-up and verification handlers, and conditional UI
+ * that switches between the initial registration form and the verification-code screen.
+ *
+ * @returns The React element tree for the SignUp screen, including inputs, error displays, SSO buttons,
+ * and the verification UI when awaiting an email code.
+ */
 export default function SignUp() {
   const { signUp, setActive, isLoaded } = useSignUp()
   const router = useRouter()

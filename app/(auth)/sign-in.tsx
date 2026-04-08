@@ -33,6 +33,13 @@ type FormErrors = {
   general?: string
 }
 
+/**
+ * Renders the sign-in screen with an email and password form and built-in validation.
+ *
+ * Attempts authentication with Clerk using the entered credentials; on successful sign-in it activates the session and navigates to "/(tabs)". Shows field-level and general error messages, tracks touched state for validation, and disables submission while loading or when inputs are invalid.
+ *
+ * @returns The sign-in screen React element.
+ */
 export default function SignIn() {
   const { signIn, setActive, isLoaded } = useSignIn()
   const router = useRouter()
