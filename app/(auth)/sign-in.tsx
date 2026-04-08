@@ -192,7 +192,11 @@ export default function SignIn() {
                 Verification Code
               </Text>
               <TextInput
-                className={errors.code ? "bg-white border border-destructive rounded-[14px] px-4 py-[15px] font-sans-medium text-primary tracking-[8px] text-xl text-center" : "bg-white border border-border rounded-[14px] px-4 py-[15px] font-sans-medium text-primary tracking-[8px] text-xl text-center"}
+                className={
+                  errors.code
+                    ? "bg-white border border-destructive rounded-[14px] px-4 py-[15px] font-sans-medium text-primary tracking-[8px] text-xl text-center"
+                    : "bg-white border border-border rounded-[14px] px-4 py-[15px] font-sans-medium text-primary tracking-[8px] text-xl text-center"
+                }
                 value={code}
                 onChangeText={setCode}
                 placeholder="000000"
@@ -212,7 +216,11 @@ export default function SignIn() {
             <TouchableOpacity
               onPress={handleVerifyCode}
               disabled={loading || !code}
-              className={loading || !code ? "bg-accent rounded-2xl py-4 items-center mb-3.5 opacity-50" : "bg-accent rounded-2xl py-4 items-center mb-3.5"}
+              className={
+                loading || !code
+                  ? "bg-accent rounded-2xl py-4 items-center mb-3.5 opacity-50"
+                  : "bg-accent rounded-2xl py-4 items-center mb-3.5"
+              }
             >
               {loading ? (
                 <ActivityIndicator color="#fff" />
@@ -325,7 +333,11 @@ export default function SignIn() {
               Email
             </Text>
             <TextInput
-              className={(errors.email || (emailTouched && !emailValid)) ? "bg-white border border-destructive rounded-[14px] px-4 py-[15px] text-[15px] font-sans-medium text-primary" : "bg-white border border-border rounded-[14px] px-4 py-[15px] text-[15px] font-sans-medium text-primary"}
+              className={
+                errors.email || (emailTouched && !emailValid)
+                  ? "bg-white border border-destructive rounded-[14px] px-4 py-[15px] text-[15px] font-sans-medium text-primary"
+                  : "bg-white border border-border rounded-[14px] px-4 py-[15px] text-[15px] font-sans-medium text-primary"
+              }
               value={email}
               onChangeText={setEmail}
               onBlur={() => setEmailTouched(true)}
@@ -353,7 +365,11 @@ export default function SignIn() {
               Password
             </Text>
             <TextInput
-              className={(errors.password || (passwordTouched && !passwordValid)) ? "bg-white border border-destructive rounded-[14px] px-4 py-[15px] text-[15px] font-sans-medium text-primary" : "bg-white border border-border rounded-[14px] px-4 py-[15px] text-[15px] font-sans-medium text-primary"}
+              className={
+                errors.password || (passwordTouched && !passwordValid)
+                  ? "bg-white border border-destructive rounded-[14px] px-4 py-[15px] text-[15px] font-sans-medium text-primary"
+                  : "bg-white border border-border rounded-[14px] px-4 py-[15px] text-[15px] font-sans-medium text-primary"
+              }
               value={password}
               onChangeText={setPassword}
               onBlur={() => setPasswordTouched(true)}
@@ -377,7 +393,11 @@ export default function SignIn() {
           <TouchableOpacity
             onPress={handleSignIn}
             disabled={loading || !formValid}
-            className={loading || !formValid ? "bg-accent rounded-2xl py-4 items-center mb-5 opacity-50" : "bg-accent rounded-2xl py-4 items-center mb-5"}
+            className={
+              loading || !formValid
+                ? "bg-accent rounded-2xl py-4 items-center mb-5 opacity-50"
+                : "bg-accent rounded-2xl py-4 items-center mb-5"
+            }
           >
             {loading ? (
               <ActivityIndicator color="#fff" />

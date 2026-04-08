@@ -157,7 +157,11 @@ export default function SignUp() {
                 Verification Code
               </Text>
               <TextInput
-                style={[INPUT_STYLE, { letterSpacing: 8, fontSize: 20, textAlign: "center" }, errors.code ? { borderColor: colors.destructive } : {}]}
+                style={[
+                  INPUT_STYLE,
+                  { letterSpacing: 8, fontSize: 20, textAlign: "center" },
+                  errors.code ? { borderColor: colors.destructive } : {}
+                ]}
                 value={code}
                 onChangeText={setCode}
                 placeholder="000000"
@@ -176,7 +180,11 @@ export default function SignUp() {
             <TouchableOpacity
               onPress={handleVerify}
               disabled={loading}
-              className={loading ? "bg-accent rounded-2xl py-4 items-center mb-3.5 opacity-50" : "bg-accent rounded-2xl py-4 items-center mb-3.5"}
+              className={
+                loading
+                  ? "bg-accent rounded-2xl py-4 items-center mb-3.5 opacity-50"
+                  : "bg-accent rounded-2xl py-4 items-center mb-3.5"
+              }
             >
               {loading ? (
                 <ActivityIndicator color="#fff" />
@@ -242,7 +250,10 @@ export default function SignUp() {
               Email
             </Text>
             <TextInput
-              style={[INPUT_STYLE, errors.email ? { borderColor: colors.destructive } : {}]}
+              style={[
+                INPUT_STYLE,
+                errors.email ? { borderColor: colors.destructive } : {}
+              ]}
               value={email}
               onChangeText={setEmail}
               placeholder="you@example.com"
@@ -263,7 +274,10 @@ export default function SignUp() {
               Password
             </Text>
             <TextInput
-              style={[INPUT_STYLE, errors.password ? { borderColor: colors.destructive } : {}]}
+              style={[
+                INPUT_STYLE,
+                errors.password ? { borderColor: colors.destructive } : {}
+              ]}
               value={password}
               onChangeText={setPassword}
               placeholder="Min. 8 characters"
@@ -280,7 +294,11 @@ export default function SignUp() {
           <TouchableOpacity
             onPress={handleSignUp}
             disabled={loading}
-            className={loading ? "bg-accent rounded-2xl py-4 items-center mb-5 opacity-50" : "bg-accent rounded-2xl py-4 items-center mb-5"}
+            className={
+              loading
+                ? "bg-accent rounded-2xl py-4 items-center mb-5 opacity-50"
+                : "bg-accent rounded-2xl py-4 items-center mb-5"
+            }
           >
             {loading ? (
               <ActivityIndicator color="#fff" />
