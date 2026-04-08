@@ -60,13 +60,9 @@ function Hero() {
 }
 
 /**
- * Renders the sign-up flow with email/password registration and email-code verification.
+ * Renders the sign-up screen that lets users register with email/password and complete email-code verification.
  *
- * Manages local form state, validation, async sign-up and verification handlers, and conditional UI
- * that switches between the initial registration form and the verification-code screen.
- *
- * @returns The React element tree for the SignUp screen, including inputs, error displays, SSO buttons,
- * and the verification UI when awaiting an email code.
+ * @returns The React element tree for the SignUp screen, including the registration form, verification-code UI, inline error displays, loading states, and SSO buttons.
  */
 export default function SignUp() {
   const { signUp, setActive, isLoaded } = useSignUp()
@@ -80,6 +76,11 @@ export default function SignUp() {
   const [errors, setErrors] = useState<FormErrors>({})
   const [pendingVerification, setPendingVerification] = useState(false)
 
+  /**
+   * Validate the current email and password values and produce field-specific error messages.
+   *
+   * @returns An object with optional `email` and `password` properties containing validation messages; empty if there are no errors.
+   */
   function validate(): FormErrors {
     const e: FormErrors = {}
     if (!email) e.email = "Email is required"
@@ -90,6 +91,11 @@ export default function SignUp() {
     return e
   }
 
+  /**
+   * Initiates account creation and starts email-code verification for the current form values.
+   *
+   * Validates email and password, sets per-field errors when validation fails, and otherwise attempts to create a Clerk sign-up and prepare email verification. On success, switches the UI into the pending verification state; on failure, sets a general error message. Manages `loading` state for the duration of the operation.
+   */
   async function handleSignUp() {
     if (!isLoaded) return
     const e = validate()
@@ -115,6 +121,11 @@ export default function SignUp() {
     }
   }
 
+  /**
+   * Verify the email confirmation code, activate the created session on success, and navigate to the main app.
+   *
+   * If Clerk is not ready, the function returns immediately. If no code is provided, it sets a validation error for the code field. While verification is in progress it sets loading state. On successful verification the newly created session is activated and the route is replaced with "/(tabs)". On failure it sets `errors.code` to the first Clerk error message found or `"Invalid code"`.
+   */
   async function handleVerify() {
     if (!isLoaded) return
     if (!code) {

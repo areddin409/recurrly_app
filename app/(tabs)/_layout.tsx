@@ -14,6 +14,13 @@ interface TabIconProps {
   focused: boolean
 }
 
+/**
+ * Renders a tab bar icon using the provided image and applies active styling when focused.
+ *
+ * @param icon - Image source for the tab glyph
+ * @param focused - Whether the tab is currently focused; applies active pill styling when true
+ * @returns The rendered icon element for use in a tab bar
+ */
 function TabIcon({ icon, focused }: TabIconProps) {
   return (
     <View className={`tabs-icon`}>

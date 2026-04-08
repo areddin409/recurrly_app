@@ -34,9 +34,9 @@ type FormErrors = {
 }
 
 /**
- * Renders the sign-in screen with an email and password form and built-in validation.
+ * Render the sign-in screen with email and password inputs, client-side validation, and Clerk authentication.
  *
- * Attempts authentication with Clerk using the entered credentials; on successful sign-in it activates the session and navigates to "/(tabs)". Shows field-level and general error messages, tracks touched state for validation, and disables submission while loading or when inputs are invalid.
+ * Attempts to authenticate using Clerk with the entered credentials; on successful sign-in it activates the created session and navigates to "/(tabs)". Shows field-level and general error messages, tracks touched state for validation, and disables submission while loading or when inputs are invalid.
  *
  * @returns The sign-in screen React element.
  */
@@ -60,6 +60,11 @@ export default function SignIn() {
   const passwordValid = password.length > 0
   const formValid = email.length > 0 && password.length > 0 && emailValid
 
+  /**
+   * Validate the current email and password values and produce field-specific error messages.
+   *
+   * @returns An object with optional `email` and `password` properties containing validation messages; returns an empty object when both fields are valid.
+   */
   function validate(): FormErrors {
     const e: FormErrors = {}
     if (!email) e.email = "Email is required"
@@ -68,6 +73,15 @@ export default function SignIn() {
     return e
   }
 
+  /**
+   * Validate input, attempt email/password sign-in with Clerk, and navigate on success.
+   *
+   * Validates the current email and password, updates field error state and touched flags when validation fails,
+   * and when valid attempts to create a sign-in session via Clerk. On successful completion it activates the created session
+   * and replaces navigation to the app root. Server-side/auth errors are mapped into field-specific (`email`, `password`)
+   * or a general `general` error and stored in state. The `loading` state is set for the duration of the request and
+   * always cleared when the operation finishes.
+   */
   async function handleSignIn() {
     if (!isLoaded || !formValid) return
     const e = validate()
