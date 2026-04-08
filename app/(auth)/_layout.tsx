@@ -1,12 +1,12 @@
-import "@/global.css"
+import { useAuth } from "@clerk/clerk-expo"
+import { Redirect, Stack } from "expo-router"
 
-import { Stack } from "expo-router"
-import "react-native-reanimated"
+export default function AuthLayout() {
+  const { isSignedIn, isLoaded } = useAuth()
 
-import { useColorScheme } from "@/hooks/use-color-scheme"
+  if (!isLoaded) return null
 
-export default function RootLayout() {
-  const colorScheme = useColorScheme()
+  if (isSignedIn) return <Redirect href="/(tabs)" />
 
   return <Stack screenOptions={{ headerShown: false }} />
 }
