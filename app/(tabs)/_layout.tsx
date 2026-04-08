@@ -1,8 +1,10 @@
 import { tabs } from "@/constants/data"
 import { colors, components } from "@/constants/theme"
+import { useAuth } from "@clerk/clerk-expo"
 import clsx from "clsx"
-import { Tabs } from "expo-router"
-import { Image, ImageSourcePropType, View } from "react-native"
+import { Redirect, Tabs } from "expo-router"
+import { Image } from "@/lib/interop"
+import { ImageSourcePropType, View } from "react-native"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 
 const tabBar = components.tabBar
@@ -23,12 +25,18 @@ function TabIcon({ icon, focused }: TabIconProps) {
 }
 
 /**
- * Provides the tab-based layout for the `(tabs)` route group, rendering a customized bottom tab bar and its screens.
+ * Render the authenticated tab-based app layout for the `(tabs)` route group with a styled, safe-area-aware bottom tab bar.
  *
- * @returns The root `<Tabs>` layout element configured with a styled, safe-area-aware tab bar and one screen per entry in `tabs`.
+ * When authentication state is loading, the component renders `null`. If the user is not signed in, it redirects to `/(auth)/sign-in`. When authenticated, it returns a `<Tabs>` layout with a screen for each entry in `tabs` and a customized tab bar styled using theme metrics and safe-area insets.
+ *
+ * @returns The root `<Tabs>` element configured with a styled bottom tab bar and one screen per entry in `tabs`.
  */
 export default function TabLayout() {
+  const { isSignedIn, isLoaded } = useAuth()
   const insets = useSafeAreaInsets()
+
+  if (!isLoaded) return null
+  if (!isSignedIn) return <Redirect href="/(auth)/sign-in" />
 
   return (
     <Tabs
