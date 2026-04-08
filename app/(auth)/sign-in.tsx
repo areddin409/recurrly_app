@@ -98,6 +98,8 @@ export default function SignIn() {
       if (result.status === "complete") {
         await setActive({ session: result.createdSessionId })
         router.replace("/(tabs)")
+      } else {
+        setErrors({ general: "Sign-in could not be completed. Please try again." })
       }
     } catch (err: any) {
       const newErrors: FormErrors = {}

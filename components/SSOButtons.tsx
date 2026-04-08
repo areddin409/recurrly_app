@@ -3,7 +3,8 @@ import { useSSO } from "@clerk/clerk-expo"
 import * as Linking from "expo-linking"
 import * as WebBrowser from "expo-web-browser"
 import { useCallback } from "react"
-import { Image, Text, TouchableOpacity, View } from "react-native"
+import { Image } from "@/lib/interop"
+import { Text, TouchableOpacity, View } from "react-native"
 
 WebBrowser.maybeCompleteAuthSession()
 

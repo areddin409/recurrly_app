@@ -47,3 +47,9 @@ app-example
 # generated native folders
 /ios
 /android
+
+
+#superpowers
+.superpowers/
+
+docs/
