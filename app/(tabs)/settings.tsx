@@ -166,16 +166,16 @@ export default function Settings() {
   }
 
   /**
-   * Prompt the user with an "Upgrade to Pro" alert informing them that the Pro upgrade is coming soon.
+   * Opens the PaywallModal to present Pro upgrade options to the user.
    */
   function handleUpgradeToPro() {
     setPaywallVisible(true)
   }
 
   /**
-   * Initiates the export-data action and displays an alert to the user.
+   * Initiates the export-data action.
    *
-   * If the user does not have a Pro subscription, shows a "Pro Feature" alert stating that export requires Pro.
+   * If the user does not have a Pro subscription, opens the PaywallModal to prompt the upgrade.
    * If the user has Pro, shows an "Export Data" alert indicating the export feature is coming soon.
    */
   function handleExportData() {
