@@ -25,6 +25,11 @@ jest.mock("expo-router", () => ({
   useRouter: () => ({ push: jest.fn(), replace: jest.fn() })
 }))
 
+jest.mock("react-native-safe-area-context", () => ({
+  useSafeAreaInsets: () => ({ top: 0, bottom: 0, left: 0, right: 0 }),
+  SafeAreaProvider: ({ children }: { children: React.ReactNode }) => children,
+}))
+
 jest.mock("@/lib/interop", () => ({
   SafeAreaView: ({ children }: { children: React.ReactNode }) => children,
   Image: (props: any) => {
@@ -69,15 +74,15 @@ describe("Settings — account card", () => {
   it("shows FREE badge for free users", () => {
     setupClerk({ isPro: false })
     render(<Settings />)
-    expect(screen.getByText("FREE")).toBeTruthy()
-    expect(screen.queryByText("PRO")).toBeNull()
+    expect(screen.getByTestId("plan-badge-free")).toBeTruthy()
+    expect(screen.queryByTestId("plan-badge-pro")).toBeNull()
   })
 
   it("shows PRO badge for pro users", () => {
     setupClerk({ isPro: true })
     render(<Settings />)
-    expect(screen.getByText("PRO")).toBeTruthy()
-    expect(screen.queryByText("FREE")).toBeNull()
+    expect(screen.getByTestId("plan-badge-pro")).toBeTruthy()
+    expect(screen.queryByTestId("plan-badge-free")).toBeNull()
   })
 })
 

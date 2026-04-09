@@ -90,7 +90,7 @@ export default function Settings() {
   const insets = useSafeAreaInsets()
   const { tabBar } = components
 
-  const isPro = has({ feature: "pro" })
+  const isPro = has?.({ feature: "pro" }) ?? false
   const [notificationsEnabled, setNotificationsEnabled] = useState(true)
   const [isSigningOut, setIsSigningOut] = useState(false)
 
@@ -173,6 +173,7 @@ export default function Settings() {
             </Text>
           </View>
           <View
+            testID={isPro ? "plan-badge-pro" : "plan-badge-free"}
             className="rounded-full px-4 py-1.5"
             style={{
               backgroundColor: isPro ? colors.primary : colors.accent,

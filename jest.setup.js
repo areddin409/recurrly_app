@@ -1,20 +1,9 @@
 // Define react-native globals
 global.__DEV__ = true
-global.__fbBatchedBridgeConfig = {
-  remoteModuleConfig: [],
-}
 
-// Mock TurboModule registry to prevent native module lookups
-jest.mock("react-native/Libraries/TurboModule/TurboModuleRegistry", () => ({
-  getEnforcing: () => ({
-    getConstants: () => ({
-      Dimensions: { screen: { width: 390, height: 844, scale: 3, fontScale: 1 } },
-      isIPhoneX_deprecated: false,
-    }),
-    initialDimensions: { screen: { width: 390, height: 844, scale: 3, fontScale: 1 } },
-  }),
-  get: () => null,
-}))
+// Set window dimensions so ScrollView doesn't throw
+const { Dimensions } = require("react-native")
+Dimensions.set({ window: { width: 390, height: 844, scale: 3, fontScale: 1 }, screen: { width: 390, height: 844, scale: 3, fontScale: 1 } })
 
 // Mock native modules that require device APIs
 jest.mock("react-native-safe-area-context", () => ({
@@ -23,8 +12,6 @@ jest.mock("react-native-safe-area-context", () => ({
   SafeAreaProvider: ({ children }) => children,
 }))
 
-// Silence console errors during tests
-if (global.console) {
-  global.console.error = jest.fn()
-  global.console.warn = jest.fn()
-}
+// Silence console errors/warns during tests
+global.console.error = jest.fn()
+global.console.warn = jest.fn()
