@@ -51,7 +51,7 @@ describe("PaywallModal — rendering", () => {
 })
 
 describe("PaywallModal — dismiss", () => {
-  it("calls onDismiss when close button is pressed", () => {
+  it("calls onDismiss when Maybe later button is pressed", () => {
     setup()
     const onDismiss = jest.fn()
     render(<PaywallModal visible onDismiss={onDismiss} />)
@@ -88,6 +88,18 @@ describe("PaywallModal — upgrade", () => {
     fireEvent.press(screen.getByTestId("paywall-upgrade-btn"))
     await waitFor(() => {
       expect(mockSessionReload).toHaveBeenCalledTimes(1)
+    })
+  })
+
+  it("calls onDismiss after upgrade flow completes", async () => {
+    setup()
+    const onDismiss = jest.fn()
+    mockOpenBrowser.mockResolvedValue(undefined)
+    mockSessionReload.mockResolvedValue(undefined)
+    render(<PaywallModal visible onDismiss={onDismiss} />)
+    fireEvent.press(screen.getByTestId("paywall-upgrade-btn"))
+    await waitFor(() => {
+      expect(onDismiss).toHaveBeenCalledTimes(1)
     })
   })
 })
