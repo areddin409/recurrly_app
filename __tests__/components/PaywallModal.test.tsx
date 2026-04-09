@@ -55,7 +55,7 @@ describe("PaywallModal — dismiss", () => {
     setup()
     const onDismiss = jest.fn()
     render(<PaywallModal visible onDismiss={onDismiss} />)
-    fireEvent.press(screen.getByTestId("paywall-close-btn"))
+    fireEvent.press(screen.getByTestId("paywall-dismiss-btn"))
     expect(onDismiss).toHaveBeenCalledTimes(1)
   })
 
