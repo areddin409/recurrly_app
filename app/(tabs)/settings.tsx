@@ -13,6 +13,7 @@ import {
   View,
 } from "react-native"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
+import PaywallModal from "@/components/PaywallModal"
 
 /**
  * Renders a small uppercase section heading with preset styling.
@@ -123,6 +124,7 @@ export default function Settings() {
   const isPro = has?.({ feature: "pro" }) ?? false
   const [notificationsEnabled, setNotificationsEnabled] = useState(true)
   const [isSigningOut, setIsSigningOut] = useState(false)
+  const [paywallVisible, setPaywallVisible] = useState(false)
 
   const displayName =
     user?.fullName ||
@@ -167,7 +169,7 @@ export default function Settings() {
    * Prompt the user with an "Upgrade to Pro" alert informing them that the Pro upgrade is coming soon.
    */
   function handleUpgradeToPro() {
-    Alert.alert("Upgrade to Pro", "Pro upgrade coming soon!")
+    setPaywallVisible(true)
   }
 
   /**
@@ -178,7 +180,7 @@ export default function Settings() {
    */
   function handleExportData() {
     if (!isPro) {
-      Alert.alert("Pro Feature", "Export requires a Pro subscription.")
+      setPaywallVisible(true)
       return
     }
     Alert.alert("Export Data", "Export coming soon!")
@@ -304,6 +306,7 @@ export default function Settings() {
         <View className="mb-5">
           <SettingsGroup>
             <SettingsRow
+              testID="export-data-btn"
               iconBg={colors.muted}
               icon="📤"
               label="Export Data"
@@ -354,6 +357,11 @@ export default function Settings() {
             <Text className="text-sm text-destructive">→</Text>
           )}
         </Pressable>
+
+        <PaywallModal
+          visible={paywallVisible}
+          onDismiss={() => setPaywallVisible(false)}
+        />
       </ScrollView>
     </SafeAreaView>
   )

@@ -38,6 +38,25 @@ jest.mock("@/lib/interop", () => ({
   }
 }))
 
+jest.mock("../components/PaywallModal", () => {
+  const { Pressable } = require("react-native")
+  return function MockPaywallModal({
+    visible,
+    onDismiss,
+  }: {
+    visible: boolean
+    onDismiss: () => void
+  }) {
+    if (!visible) return null
+    return (
+      <>
+        <Pressable testID="paywall-upgrade-btn" onPress={jest.fn()} />
+        <Pressable testID="paywall-dismiss-btn" onPress={onDismiss} />
+      </>
+    )
+  }
+})
+
 // ── Helpers ───────────────────────────────────────────────────────────────────
 import { useAuth, useClerk, useUser } from "@clerk/clerk-expo"
 
@@ -155,5 +174,27 @@ describe("Settings — Manage Account", () => {
     await waitFor(() => {
       expect(mockOpenBrowser).toHaveBeenCalledTimes(1)
     })
+  })
+})
+
+describe("Settings — paywall triggers", () => {
+  it("opens paywall when Upgrade to Pro row is pressed", () => {
+    setupClerk({ isPro: false })
+    render(<Settings />)
+    fireEvent.press(screen.getByText("Upgrade to Pro"))
+    expect(screen.getByTestId("paywall-upgrade-btn")).toBeTruthy()
+  })
+
+  it("opens paywall when Export Data row is pressed by free user", () => {
+    setupClerk({ isPro: false })
+    render(<Settings />)
+    fireEvent.press(screen.getByTestId("export-data-btn"))
+    expect(screen.getByTestId("paywall-upgrade-btn")).toBeTruthy()
+  })
+
+  it("does not show paywall on mount", () => {
+    setupClerk({ isPro: false })
+    render(<Settings />)
+    expect(screen.queryByTestId("paywall-upgrade-btn")).toBeNull()
   })
 })
