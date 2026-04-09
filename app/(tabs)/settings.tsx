@@ -14,7 +14,12 @@ import {
 } from "react-native"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 
-// ── Sub-components ────────────────────────────────────────────────────────────
+/**
+ * Renders a small uppercase section heading with preset styling.
+ *
+ * @param title - The heading text to display
+ * @returns A `Text` element styled as an uppercase, muted section label
+ */
 
 function SectionLabel({ title }: { title: string }) {
   return (
@@ -24,6 +29,12 @@ function SectionLabel({ title }: { title: string }) {
   )
 }
 
+/**
+ * Renders a card-styled container for grouping settings rows.
+ *
+ * @param children - Content to render inside the group
+ * @returns A View containing `children` with card background, rounded corners, border, and overflow hidden
+ */
 function SettingsGroup({ children }: { children: React.ReactNode }) {
   return (
     <View className="bg-card rounded-2xl border border-border overflow-hidden">
@@ -43,6 +54,19 @@ type SettingsRowProps = {
   divider?: boolean
 }
 
+/**
+ * Renders a configurable settings row with an optional divider, left icon, main label, optional subtitle, and optional right-side content.
+ *
+ * @param iconBg - Background color for the left icon container.
+ * @param icon - Icon glyph or text displayed inside the left container.
+ * @param label - Main label text for the row.
+ * @param subtitle - Optional secondary text shown beneath the label.
+ * @param right - Optional React node rendered at the right side of the row.
+ * @param onPress - Optional press handler for the row.
+ * @param testID - Optional test identifier applied to the pressable.
+ * @param divider - If `true`, renders a horizontal divider above the row (default: `false`).
+ * @returns The rendered settings row element.
+ */
 function SettingsRow({
   iconBg,
   icon,
@@ -81,7 +105,13 @@ function SettingsRow({
   )
 }
 
-// ── Screen ────────────────────────────────────────────────────────────────────
+/**
+ * Renders the Settings screen with account information, grouped settings (Account, General, Plan, Data), and a sign-out control.
+ *
+ * The UI adapts to the user's Pro status, shows avatar/name/email, provides actions for managing the account, toggling notifications, upgrading to Pro, exporting/importing data (export gated to Pro), and signing out.
+ *
+ * @returns The Settings screen JSX element.
+ */
 
 export default function Settings() {
   const { user } = useUser()
@@ -102,6 +132,12 @@ export default function Settings() {
   const email = user?.primaryEmailAddress?.emailAddress ?? ""
   const avatarUri = user?.imageUrl
 
+  /**
+   * Open the user's account management page in the system browser.
+   *
+   * Uses Clerk's `buildUserProfileUrl()` when available; otherwise falls back to
+   * "https://accounts.clerk.com/user".
+   */
   async function handleManageAccount() {
     const url =
       typeof (clerk as any).buildUserProfileUrl === "function"
@@ -110,6 +146,11 @@ export default function Settings() {
     await WebBrowser.openBrowserAsync(url)
   }
 
+  /**
+   * Initiates user sign-out, preventing concurrent sign-out attempts.
+   *
+   * Sets the local signing-out state while the operation is in progress and logs any error if sign-out fails.
+   */
   async function handleSignOut() {
     if (isSigningOut) return
     setIsSigningOut(true)
@@ -122,10 +163,19 @@ export default function Settings() {
     }
   }
 
+  /**
+   * Prompt the user with an "Upgrade to Pro" alert informing them that the Pro upgrade is coming soon.
+   */
   function handleUpgradeToPro() {
     Alert.alert("Upgrade to Pro", "Pro upgrade coming soon!")
   }
 
+  /**
+   * Initiates the export-data action and displays an alert to the user.
+   *
+   * If the user does not have a Pro subscription, shows a "Pro Feature" alert stating that export requires Pro.
+   * If the user has Pro, shows an "Export Data" alert indicating the export feature is coming soon.
+   */
   function handleExportData() {
     if (!isPro) {
       Alert.alert("Pro Feature", "Export requires a Pro subscription.")
@@ -134,6 +184,11 @@ export default function Settings() {
     Alert.alert("Export Data", "Export coming soon!")
   }
 
+  /**
+   * Prompt the user with an alert indicating CSV import is not yet available.
+   *
+   * Shows an alert titled "Import CSV" with the message "CSV import coming soon!".
+   */
   function handleImportCSV() {
     Alert.alert("Import CSV", "CSV import coming soon!")
   }
