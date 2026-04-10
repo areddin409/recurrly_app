@@ -34,7 +34,9 @@ export const clerkBillingWebhook = httpAction(async (_ctx, request) => {
   }
 
   // 4. Handle events
-  // v1: log only. v2: upsert billing record / revoke session on subscription.deleted
+  // v1: log only. v2: upsert billing record / revoke session on cancellation.
+  // NOTE: Clerk does not emit subscription.deleted — cancellations come via
+  // subscriptionItem.canceled and subscriptionItem.ended.
   switch (event.type) {
     case "subscription.created":
       console.log("[billing] subscription.created", JSON.stringify(event.data))
@@ -42,10 +44,19 @@ export const clerkBillingWebhook = httpAction(async (_ctx, request) => {
     case "subscription.updated":
       console.log("[billing] subscription.updated", JSON.stringify(event.data))
       break
-    case "subscription.deleted":
+    case "subscription.active":
+      console.log("[billing] subscription.active", JSON.stringify(event.data))
+      break
+    case "subscription.pastDue":
+      console.log("[billing] subscription.pastDue", JSON.stringify(event.data))
+      break
+    case "subscriptionItem.canceled":
       // NOTE: user retains Pro entitlement until Clerk session token expires.
       // In v2, call Clerk Backend API to revoke active sessions for this user.
-      console.log("[billing] subscription.deleted", JSON.stringify(event.data))
+      console.log("[billing] subscriptionItem.canceled", JSON.stringify(event.data))
+      break
+    case "subscriptionItem.ended":
+      console.log("[billing] subscriptionItem.ended", JSON.stringify(event.data))
       break
     default:
       // Unknown event type — acknowledge and ignore
