@@ -1,17 +1,25 @@
 import { SafeAreaView } from "@/lib/interop"
+import PaywallModal from "@/components/PaywallModal"
+import { useAuth } from "@clerk/clerk-expo"
+import { useEffect, useState } from "react"
 import { Text } from "react-native"
 
-/**
- * Render the Insights screen UI.
- *
- * Displays a SafeAreaView containing a heading labeled "Insights" with the app's layout and typography classes.
- *
- * @returns A JSX element representing the Insights screen
- */
 export default function Insights() {
+  const { has } = useAuth()
+  const isPro = has?.({ feature: "pro" }) ?? false
+  const [paywallVisible, setPaywallVisible] = useState(!isPro)
+
+  useEffect(() => {
+    setPaywallVisible(!isPro)
+  }, [isPro])
+
   return (
     <SafeAreaView className="flex-1 bg-background p-5">
       <Text className="text-xl font-sans-bold text-primary">Insights</Text>
+      <PaywallModal
+        visible={paywallVisible}
+        onDismiss={() => setPaywallVisible(false)}
+      />
     </SafeAreaView>
   )
 }
