@@ -1,4 +1,4 @@
-import { httpAction } from "convex/server"
+import { httpActionGeneric as httpAction } from "convex/server"
 import { Webhook } from "svix"
 
 export const clerkBillingWebhook = httpAction(async (_ctx, request) => {
