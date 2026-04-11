@@ -1,4 +1,4 @@
-import { httpAction } from "convex/server"
+import { httpActionGeneric as httpAction } from "convex/server"
 import { Webhook } from "svix"
 
 export const clerkBillingWebhook = httpAction(async (_ctx, request) => {
@@ -27,14 +27,16 @@ export const clerkBillingWebhook = httpAction(async (_ctx, request) => {
     event = wh.verify(body, {
       "svix-id": svixId,
       "svix-timestamp": svixTimestamp,
-      "svix-signature": svixSignature,
+      "svix-signature": svixSignature
     }) as { type: string; data: unknown }
   } catch {
     return new Response("Invalid signature", { status: 400 })
   }
 
   // 4. Handle events
-  // v1: log only. v2: upsert billing record / revoke session on subscription.deleted
+  // v1: log only. v2: upsert billing record / revoke session on cancellation.
+  // NOTE: Clerk does not emit subscription.deleted — cancellations come via
+  // subscriptionItem.canceled and subscriptionItem.ended.
   switch (event.type) {
     case "subscription.created":
       console.log("[billing] subscription.created", JSON.stringify(event.data))
@@ -42,10 +44,31 @@ export const clerkBillingWebhook = httpAction(async (_ctx, request) => {
     case "subscription.updated":
       console.log("[billing] subscription.updated", JSON.stringify(event.data))
       break
-    case "subscription.deleted":
+    case "subscription.active":
+      console.log("[billing] subscription.active", {
+        id: (event.data as any)?.id,
+        status: (event.data as any)?.status
+      })
+      break
+    case "subscription.pastDue":
+      console.log("[billing] subscription.pastDue", {
+        id: (event.data as any)?.id,
+        status: (event.data as any)?.status
+      })
+      break
+    case "subscriptionItem.canceled":
       // NOTE: user retains Pro entitlement until Clerk session token expires.
       // In v2, call Clerk Backend API to revoke active sessions for this user.
-      console.log("[billing] subscription.deleted", JSON.stringify(event.data))
+      console.log("[billing] subscriptionItem.canceled", {
+        id: (event.data as any)?.id,
+        status: (event.data as any)?.status
+      })
+      break
+    case "subscriptionItem.ended":
+      console.log("[billing] subscriptionItem.ended", {
+        id: (event.data as any)?.id,
+        status: (event.data as any)?.status
+      })
       break
     default:
       // Unknown event type — acknowledge and ignore

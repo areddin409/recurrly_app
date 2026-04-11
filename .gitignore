@@ -52,3 +52,15 @@ app-example
 #superpowers
 .superpowers/
 
+# Convex generated files
+convex/_generated/
+convex/tsconfig.json
+
+# Agent / skills tooling
+.agents/
+skills/
+skills-lock.json
+
+# Next.js generated
+checkout-web/next-env.d.ts
+
