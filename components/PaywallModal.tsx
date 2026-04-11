@@ -1,5 +1,9 @@
 import { useClerk } from "@clerk/clerk-expo"
 import * as WebBrowser from "expo-web-browser"
+import { Gesture, GestureDetector, GestureHandlerRootView } from "react-native-gesture-handler"
+import Animated, { Easing, useAnimatedStyle, useSharedValue, withSpring, withTiming } from "react-native-reanimated"
+import { scheduleOnRN } from "react-native-worklets"
+import { useEffect } from "react"
 import { Modal, Pressable, Text, View } from "react-native"
 
 type PaywallModalProps = {
@@ -14,26 +18,64 @@ const FEATURES = [
   { label: "Multi-currency display", icon: "💱" },
 ]
 
+const SHEET_OFF = 900
+
 export default function PaywallModal({ visible, onDismiss }: PaywallModalProps) {
   const clerk = useClerk()
+  const translateY = useSharedValue(SHEET_OFF)
+
+  useEffect(() => {
+    if (visible) {
+      translateY.value = SHEET_OFF
+      translateY.value = withTiming(0, { duration: 380, easing: Easing.out(Easing.cubic) })
+    } else {
+      translateY.value = SHEET_OFF
+    }
+  }, [visible])
+
+  function animateDismiss() {
+    translateY.value = withTiming(SHEET_OFF, { duration: 280 }, () => {
+      scheduleOnRN(onDismiss)
+    })
+  }
+
+  const pan = Gesture.Pan()
+    .onUpdate((e) => {
+      translateY.value = Math.max(0, e.translationY)
+    })
+    .onEnd((e) => {
+      if (e.translationY > 80) {
+        translateY.value = withTiming(SHEET_OFF, { duration: 250 }, () => {
+          scheduleOnRN(onDismiss)
+        })
+      } else {
+        translateY.value = withSpring(0)
+      }
+    })
+
+  const sheetStyle = useAnimatedStyle(() => ({
+    transform: [{ translateY: translateY.value }],
+  }))
 
   async function handleUpgrade() {
     const url = process.env.EXPO_PUBLIC_CLERK_CHECKOUT_URL
     if (!url) return
     await WebBrowser.openBrowserAsync(url)
     await clerk.session?.reload()
-    onDismiss()
+    animateDismiss()
   }
 
   return (
     <Modal
       visible={visible}
-      animationType="slide"
+      animationType="none"
       transparent
-      onRequestClose={onDismiss}
+      onRequestClose={animateDismiss}
     >
       <View className="modal-overlay">
-        <View className="modal-container">
+        <GestureHandlerRootView>
+          <GestureDetector gesture={pan}>
+            <Animated.View className="modal-container" style={sheetStyle}>
           {/* Drag handle */}
           <View className="items-center pt-3 pb-1">
             <View className="h-1 w-10 rounded-full bg-border" />
@@ -117,7 +159,7 @@ export default function PaywallModal({ visible, onDismiss }: PaywallModalProps) 
             </Pressable>
             <Pressable
               testID="paywall-dismiss-btn"
-              onPress={onDismiss}
+              onPress={animateDismiss}
               className="items-center py-2"
             >
               <Text className="text-sm font-sans-medium text-muted-foreground">
@@ -125,7 +167,9 @@ export default function PaywallModal({ visible, onDismiss }: PaywallModalProps) 
               </Text>
             </Pressable>
           </View>
-        </View>
+            </Animated.View>
+          </GestureDetector>
+        </GestureHandlerRootView>
       </View>
     </Modal>
   )

@@ -122,6 +122,7 @@ export default function Settings() {
   const { tabBar } = components
 
   const isPro = has?.({ feature: "pro" }) ?? false
+
   const [notificationsEnabled, setNotificationsEnabled] = useState(true)
   const [isSigningOut, setIsSigningOut] = useState(false)
   const [paywallVisible, setPaywallVisible] = useState(false)

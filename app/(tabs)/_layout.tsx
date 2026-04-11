@@ -1,9 +1,9 @@
 import { tabs } from "@/constants/data"
 import { colors, components } from "@/constants/theme"
+import { Image } from "@/lib/interop"
 import { useAuth } from "@clerk/clerk-expo"
 import clsx from "clsx"
 import { Redirect, Tabs } from "expo-router"
-import { Image } from "@/lib/interop"
 import { ImageSourcePropType, View } from "react-native"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 
@@ -23,7 +23,7 @@ interface TabIconProps {
  */
 function TabIcon({ icon, focused }: TabIconProps) {
   return (
-    <View className={`tabs-icon`}>
+    <View className="tabs-icon">
       <View className={clsx("tabs-pill", focused && "tabs-active")}>
         <Image source={icon} resizeMode="contain" className="tabs-glyph" />
       </View>
@@ -47,6 +47,7 @@ export default function TabLayout() {
 
   return (
     <Tabs
+      safeAreaInsets={{ bottom: 0 }}
       screenOptions={{
         headerShown: false,
         tabBarShowLabel: false,
@@ -56,18 +57,18 @@ export default function TabLayout() {
           height: tabBar.height,
           marginHorizontal: tabBar.horizontalInset,
           borderRadius: tabBar.radius,
-          paddingVertical: tabBar.itemPaddingVertical,
           backgroundColor: colors.primary,
           borderTopWidth: 0,
           elevation: 0
         },
         tabBarItemStyle: {
-          paddingVertical: tabBar.height / 2 - tabBar.iconFrame / 1.6
+          flex: 1,
+          alignItems: "center",
+          justifyContent: "center",
         },
         tabBarIconStyle: {
           width: tabBar.iconFrame,
-          height: tabBar.iconFrame,
-          alignSelf: "center"
+          height: tabBar.iconFrame /2,
         }
       }}
     >
