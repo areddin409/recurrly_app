@@ -27,7 +27,7 @@ export const clerkBillingWebhook = httpAction(async (_ctx, request) => {
     event = wh.verify(body, {
       "svix-id": svixId,
       "svix-timestamp": svixTimestamp,
-      "svix-signature": svixSignature,
+      "svix-signature": svixSignature
     }) as { type: string; data: unknown }
   } catch {
     return new Response("Invalid signature", { status: 400 })
@@ -45,18 +45,30 @@ export const clerkBillingWebhook = httpAction(async (_ctx, request) => {
       console.log("[billing] subscription.updated", JSON.stringify(event.data))
       break
     case "subscription.active":
-      console.log("[billing] subscription.active", JSON.stringify(event.data))
+      console.log("[billing] subscription.active", {
+        id: (event.data as any)?.id,
+        status: (event.data as any)?.status
+      })
       break
     case "subscription.pastDue":
-      console.log("[billing] subscription.pastDue", JSON.stringify(event.data))
+      console.log("[billing] subscription.pastDue", {
+        id: (event.data as any)?.id,
+        status: (event.data as any)?.status
+      })
       break
     case "subscriptionItem.canceled":
       // NOTE: user retains Pro entitlement until Clerk session token expires.
       // In v2, call Clerk Backend API to revoke active sessions for this user.
-      console.log("[billing] subscriptionItem.canceled", JSON.stringify(event.data))
+      console.log("[billing] subscriptionItem.canceled", {
+        id: (event.data as any)?.id,
+        status: (event.data as any)?.status
+      })
       break
     case "subscriptionItem.ended":
-      console.log("[billing] subscriptionItem.ended", JSON.stringify(event.data))
+      console.log("[billing] subscriptionItem.ended", {
+        id: (event.data as any)?.id,
+        status: (event.data as any)?.status
+      })
       break
     default:
       // Unknown event type — acknowledge and ignore
