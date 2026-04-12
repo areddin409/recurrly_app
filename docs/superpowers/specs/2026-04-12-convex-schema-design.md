@@ -33,6 +33,8 @@ subscriptions: defineTable({
   category: v.optional(v.string()),
   accentColor: v.optional(v.string()), // hex from accent palette
   iconUrl: v.optional(v.string()),
+  paymentMethod: v.optional(v.string()), // e.g. "Visa ending in 8530" — user-entered, display only
+  startDate: v.optional(v.number()),     // Unix ms — when subscription started
   status: v.union(
     v.literal("active"),
     v.literal("paused"),
@@ -53,6 +55,10 @@ subscriptions: defineTable({
 **Notes:**
 - `accentColor` cycles through the three accent palette colors (blue → yellow → teal) on creation, not user-selectable in v1
 - `amount` stored as float; currency conversion is a Pro v2 feature
+- `paymentMethod` is user-entered display text (not verified against a payment processor); rendered in expanded card view
+- `startDate` is optional Unix ms; rendered in expanded card view as "Started: [date]". Not required on create.
+- `iconUrl` is a URL string; when passed to React Native `<Image>`, must be wrapped as `{ uri: iconUrl }` — this is a component mapping concern, not a schema concern
+- `plan` is intentionally omitted — the component falls back to `category` for the sub-label; plan-tier info can live in `notes` or the service name
 - Changed from original spec: `userId` → `tokenIdentifier` to match Convex auth guidelines
 
 ---
